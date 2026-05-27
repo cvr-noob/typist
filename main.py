@@ -12,9 +12,20 @@ c.press(Key.ctrl_l)
 c.tap('a')
 c.release(Key.ctrl_l)
 
+# List of characters that Monaco typically auto-closes
+auto_close_chars = ['(', '[', '{', '"', "'"]
+
 for line in text.split('\n'):
-    c.type(line)
-    
+    for char in line:
+        c.type(char)
+        
+        # If the character triggers an auto-completed pair, delete the pair immediately
+        if char in auto_close_chars:
+            # Tiny sleep to ensure Monaco has time to render the auto-completed character
+            sleep(0.02) 
+            # 'Delete' removes the character immediately to the right of the cursor
+            c.tap(Key.delete) 
+            
     c.tap(Key.enter)
 
     sleep(0.05)
